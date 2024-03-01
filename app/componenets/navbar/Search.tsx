@@ -23,13 +23,14 @@ const Search = () => {
         relative
         grow
         md:grow-0
+        text-sm
+        font-semibold
       "
     >
       <div
         className="
         sm:border-e-[1px]
         border-neutral-200
-        font-medium
         pe-6
         "
       >
@@ -37,7 +38,6 @@ const Search = () => {
       </div>
       <div
         className="
-        font-medium
         px-6
         hidden
         sm:block
@@ -56,7 +56,6 @@ const Search = () => {
           className="
           border-s-[1px]
         border-neutral-200
-        font-medium
         text-neutral-500
         ps-6
         pe-2

@@ -3,6 +3,7 @@
 import Container from "../Container";
 import Logo from "./Logo";
 import Search from "./Search";
+import UserMenu from "./UserMenu";
 
 const Navbar = () => {
   return (
@@ -31,12 +32,14 @@ const Navbar = () => {
             flex-row
             items-center
             justify-between
+            gap-2
             "
           >
             <div className="hidden md:block">
               <Logo />
             </div>
             <Search />
+            <UserMenu />
           </div>
         </Container>
       </div>
