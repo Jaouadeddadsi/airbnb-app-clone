@@ -12,7 +12,7 @@ const Navbar = () => {
         w-full
         fixed
         top-0
-        inset-y-0
+        inset-x-0
         z-10
         shadow-sm*
         bg-white
