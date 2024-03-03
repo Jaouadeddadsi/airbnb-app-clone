@@ -4,12 +4,13 @@ import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import Modal from "./Modal";
 import Heading from "../Heading";
 import Input from "../inputs/Input";
-import toast from "react-hot-toast";
 
 const schema = yup.object({
   email: yup.string().email().required(),
@@ -25,6 +26,7 @@ const RegisterModal = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     defaultValues: {
       email: "",
@@ -37,11 +39,18 @@ const RegisterModal = () => {
   // back to it
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsloading(true);
-    setTimeout(() => {
-      console.log(data);
-    }, 5000);
-    toast.success("Form submited");
-    setIsloading(false);
+    axios
+      .post("/api/register", data)
+      .then(() => {
+        toast.success("Account created successfuly");
+        reset();
+      })
+      .catch(() => {
+        toast.error("Something went wrong!");
+      })
+      .finally(() => {
+        setIsloading(false);
+      });
   };
 
   const bodyContent = (
