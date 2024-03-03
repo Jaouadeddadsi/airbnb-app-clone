@@ -1,9 +1,9 @@
 "use client";
 
-import { ReactNode } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
+
 import Button from "../Button";
-import { AiFillGoogleCircle } from "react-icons/ai";
 
 interface ModalProps {
   label: string;
@@ -12,6 +12,7 @@ interface ModalProps {
   onClose: () => void;
   body?: React.ReactElement;
   footer?: React.ReactElement;
+  isOpen: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -21,7 +22,23 @@ const Modal: React.FC<ModalProps> = ({
   footer,
   actionLabel,
   action,
+  isOpen,
 }) => {
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowModal(isOpen);
+    }, 300);
+  }, [isOpen, setShowModal]);
+
+  const toggele = useCallback(() => {
+    setShowModal(false);
+    setTimeout(() => {
+      onClose();
+    }, 300);
+  }, [setShowModal, onClose]);
+
   return (
     <div
       className="
@@ -35,7 +52,7 @@ const Modal: React.FC<ModalProps> = ({
       "
     >
       <div
-        className="
+        className={`
           w-full
           md:w-3/4
           lg:w-1/2
@@ -44,7 +61,11 @@ const Modal: React.FC<ModalProps> = ({
           md:h-auto
           rounded-lg
           bg-white
-        "
+          translate
+          duration-300
+          ${showModal ? "translate-y-0" : "translate-y-full"}
+          ${showModal ? "opacity-100" : "opacity-0"}
+        `}
       >
         <div
           className="
@@ -61,8 +82,8 @@ const Modal: React.FC<ModalProps> = ({
           "
         >
           {label}
-          <div
-            onClick={onClose}
+          <button
+            onClick={toggele}
             className="
           absolute
           left-4
@@ -73,7 +94,7 @@ const Modal: React.FC<ModalProps> = ({
         "
           >
             <IoMdClose size={20} />
-          </div>
+          </button>
         </div>
         {/* body */}
         <div

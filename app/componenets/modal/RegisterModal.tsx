@@ -127,6 +127,7 @@ const RegisterModal = () => {
           onClose={registerModal.onClose}
           body={bodyContent}
           footer={footerContent}
+          isOpen={registerModal.isOpen}
         />
       )}
     </>

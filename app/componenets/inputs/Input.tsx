@@ -21,7 +21,6 @@ const Input: React.FC<InputProps> = ({
   required,
   disabled,
 }) => {
-  
   return (
     <div className="relative">
       <input
@@ -33,6 +32,7 @@ const Input: React.FC<InputProps> = ({
         border-2
         p-4
         rounded-md
+        bg-transparent
         peer
         outline-none
         focus:outline-none
@@ -45,6 +45,7 @@ const Input: React.FC<InputProps> = ({
       />
       <label
         className={`
+        z-[-1]
         absolute
         left-2
         top-1

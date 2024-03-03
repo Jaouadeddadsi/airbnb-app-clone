@@ -1,11 +1,16 @@
 "use client";
 
 import { useCallback, useState } from "react";
+
 import Item from "./Item";
 import UserItem from "./UserItem";
 
+import useRegisterModal from "@/app/hooks/useRegisterModal";
+
 const UserMenu = () => {
   const [isVisible, setIsVisible] = useState(false);
+
+  const registerModal = useRegisterModal();
 
   const toggele = useCallback(() => {
     setIsVisible((value) => !value);
@@ -53,7 +58,7 @@ const UserMenu = () => {
         "
         >
           <Item onClick={() => {}} label="Login" />
-          <Item onClick={() => {}} label="Sign up" />
+          <Item onClick={registerModal.onOpen} label="Sign up" />
         </div>
       )}
     </div>

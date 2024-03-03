@@ -5,7 +5,7 @@ import Avatar from "../Avatar";
 
 const UserItem = () => {
   return (
-    <div
+    <button
       className="
         p-3
         md:p-0
@@ -29,7 +29,7 @@ const UserItem = () => {
       <div className="hidden md:block">
         <Avatar />
       </div>
-    </div>
+    </button>
   );
 };
 
