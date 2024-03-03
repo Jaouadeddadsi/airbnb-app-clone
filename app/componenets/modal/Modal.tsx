@@ -39,6 +39,7 @@ const Modal: React.FC<ModalProps> = ({
           w-full
           md:w-3/4
           lg:w-1/2
+          xl:w-2/5
           h-full
           md:h-auto
           rounded-lg
@@ -77,7 +78,7 @@ const Modal: React.FC<ModalProps> = ({
         {/* body */}
         <div
           className="
-          p-4
+          p-6
         "
         >
           {body}
