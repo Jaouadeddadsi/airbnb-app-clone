@@ -11,6 +11,9 @@ import useRegisterModal from "@/app/hooks/useRegisterModal";
 import Modal from "./Modal";
 import Heading from "../Heading";
 import Input from "../inputs/Input";
+import Button from "../Button";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
 const schema = yup.object({
   email: yup.string().email().required(),
@@ -84,6 +87,36 @@ const RegisterModal = () => {
     </div>
   );
 
+  const footerContent = (
+    <div className="flex flex-col gap-4">
+      <Button
+        actionLabel="Continue with Google"
+        action={() => {}}
+        icon={FcGoogle}
+        outline
+      />
+      <Button
+        actionLabel="Continue with Github"
+        action={() => {}}
+        icon={FaGithub}
+        outline
+      />
+      <div className="text-neutral-500 text-center mt-4">
+        Alread have an account?
+        <span
+          className="
+              text-black
+              cursor-pointer
+              inline-block
+              ps-2
+            "
+        >
+          Login
+        </span>
+      </div>
+    </div>
+  );
+
   return (
     <>
       {registerModal.isOpen && (
@@ -93,6 +126,7 @@ const RegisterModal = () => {
           action={handleSubmit(onSubmit)}
           onClose={registerModal.onClose}
           body={bodyContent}
+          footer={footerContent}
         />
       )}
     </>

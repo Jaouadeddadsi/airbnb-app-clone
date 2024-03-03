@@ -78,18 +78,20 @@ const Modal: React.FC<ModalProps> = ({
         {/* body */}
         <div
           className="
-          p-6
+          p-4
+          pb-0
         "
         >
           {body}
           <div
             className="
+            pb-6
           "
           >
             <Button actionLabel={actionLabel} action={action} />
           </div>
           {/* footer */}
-          {footer && <div className="mt-8 border-t-[1px]">{footer}</div>}
+          {footer && <div className="py-6 border-t-[1px]">{footer}</div>}
         </div>
       </div>
     </div>
