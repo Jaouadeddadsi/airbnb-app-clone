@@ -1,38 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
-import axios from "axios";
+import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
-
+import { signIn } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
+
+import useLoginModal from "@/app/hooks/userLoginModal";
 import Modal from "./Modal";
 import Heading from "../Heading";
 import Input from "../inputs/Input";
 import Button from "../Button";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
-import useLoginModal from "@/app/hooks/userLoginModal";
 
 type FormValues = {
   email: string;
-  name: string;
   password: string;
 };
 
 const schema = yup.object({
   email: yup.string().email().required(),
-  name: yup.string().required(),
   password: yup.string().required(),
 });
 
-const RegisterModal = () => {
-  const [isLoading, setIsloading] = useState(false);
-
-  const registerModal = useRegisterModal();
+const LoginModal = () => {
   const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -42,44 +39,32 @@ const RegisterModal = () => {
   } = useForm<FormValues>({
     defaultValues: {
       email: "",
-      name: "",
       password: "",
     },
     resolver: yupResolver(schema),
   });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    setIsloading(true);
-    axios
-      .post("/api/register", data)
-      .then(() => {
-        toast.success("Account created successfuly");
-        reset();
-        registerModal.onClose();
-        loginModal.onOpen();
-      })
-      .catch(() => {
-        toast.error("Something went wrong!");
-      })
-      .finally(() => {
-        setIsloading(false);
-      });
+    setIsLoading(true);
+    try {
+      const { email, password } = data;
+      signIn("credentials", { email, password });
+      toast.success("Logged In");
+      reset();
+      loginModal.onClose();
+    } catch (error) {
+      toast.error("Something went wrong! try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const bodyContent = (
     <div className="mb-8 flex flex-col gap-4">
-      <Heading title="Welcome to Airbnb" subtitle="Create an account!" />
+      <Heading title="Welcome back" subtitle="Login to your account" />
       <Input
         id="email"
         label="Email"
-        register={register}
-        errors={errors}
-        required
-        disabled={isLoading}
-      />
-      <Input
-        id="name"
-        label="Name"
         register={register}
         errors={errors}
         required
@@ -112,11 +97,11 @@ const RegisterModal = () => {
         outline
       />
       <div className="text-neutral-500 text-center mt-4">
-        Alread have an account?
+        Don't have an account?
         <span
           onClick={() => {
-            registerModal.onClose();
-            loginModal.onOpen();
+            loginModal.onClose()
+            registerModal.onOpen()
           }}
           className="
               text-black
@@ -125,7 +110,7 @@ const RegisterModal = () => {
               ps-2
             "
         >
-          Login
+          register
         </span>
       </div>
     </div>
@@ -133,19 +118,19 @@ const RegisterModal = () => {
 
   return (
     <>
-      {registerModal.isOpen && (
+      {loginModal.isOpen && (
         <Modal
-          label="Register"
+          label="Login"
           actionLabel="Continue"
           action={handleSubmit(onSubmit)}
-          onClose={registerModal.onClose}
+          onClose={loginModal.onClose}
           body={bodyContent}
           footer={footerContent}
-          isOpen={registerModal.isOpen}
+          isOpen={loginModal.isOpen}
         />
       )}
     </>
   );
 };
 
-export default RegisterModal;
+export default LoginModal;

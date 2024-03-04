@@ -5,6 +5,8 @@ import "./globals.css";
 import Navbar from "./componenets/navbar/Navbar";
 import RegisterModal from "./componenets/modal/RegisterModal";
 import ToastProvider from "./provides/ToastProvider";
+import LoginModal from "./componenets/modal/LoginModal";
+import getCurrentUser from "./actions/getCurrentUser";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -13,16 +15,19 @@ export const metadata: Metadata = {
   description: "Next.js implementation inspired  by the Airbnb website",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const currentUser = await getCurrentUser();
+
   return (
     <html lang="en">
       <body className={nunito.className}>
-        <Navbar />
+        <Navbar currentUser={currentUser} />
         <RegisterModal />
+        <LoginModal />
         <ToastProvider />
         {children}
       </body>
