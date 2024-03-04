@@ -1,16 +1,22 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
+
 import { SafeUser } from "@/app/types";
 import Container from "../Container";
 import Logo from "./Logo";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
+import Categories from "./Categories";
 
 interface NavbarProps {
   currentUser?: SafeUser | null;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
+  const pathname = usePathname();
+  const router = useRouter()
+
   return (
     <div
       className="
@@ -40,7 +46,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
             gap-2
             "
           >
-            <div className="hidden md:block">
+            <div
+            onClick={() => { router.push('/') }}  
+            className="hidden md:block">
               <Logo />
             </div>
             <Search />
@@ -48,6 +56,21 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
           </div>
         </Container>
       </div>
+      {/* categories */}
+      {pathname === "/" && (
+        <div
+          className="
+          border-b-[1px]
+          border-neutral-100
+          overflow-x-auto
+          overflow-y-hidden
+        "
+        >
+          <Container>
+            <Categories />
+          </Container>
+        </div>
+      )}
     </div>
   );
 };
