@@ -1,7 +1,10 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 import { BsSnow } from "react-icons/bs";
 import { FaSkiing } from "react-icons/fa";
+import qs from "query-string";
 import {
   GiBarn,
   GiBoatFishing,
@@ -17,7 +20,6 @@ import { MdOutlineVilla } from "react-icons/md";
 import { TbBeach, TbMountain, TbPool } from "react-icons/tb";
 
 import CategoryBox from "../CategoryBox";
-import { Suspense } from "react";
 
 export const categories = [
   {
@@ -98,6 +100,33 @@ export const categories = [
 ];
 
 const Categories = () => {
+  const params = useSearchParams();
+  const router = useRouter();
+
+  const onClick = useCallback(
+    (label: string) => {
+      let query;
+      if (params) {
+        query = qs.parse(params.toString());
+      }
+      const updatedQuery: any = {
+        ...query,
+        category: label,
+      };
+      if (query?.category === label) {
+        delete updatedQuery.category;
+      }
+      const url = qs.stringifyUrl(
+        {
+          url: "/",
+          query: updatedQuery,
+        },
+        { skipNull: true }
+      );
+      router.push(url);
+    },
+    [router, params]
+  );
   return (
     <div
       className="
@@ -110,9 +139,31 @@ const Categories = () => {
       "
     >
       {categories.map((category) => (
-        <Suspense key={category.label}>
+        <div
+          onClick={() => {
+            onClick(category.label);
+          }}
+          key={category.label}
+          className={`
+            cursor-pointer
+          hover:text-black
+            transition
+            p-4
+          border-b-2
+          ${
+            params.get("category") === category.label
+              ? "text-black"
+              : "text-neutral-500"
+          }
+          ${
+            params.get("category") === category.label
+              ? "border-b-black"
+              : "border-b-transparent"
+          }
+          `}
+        >
           <CategoryBox label={category.label} icon={category.icon} />
-        </Suspense>
+        </div>
       ))}
     </div>
   );

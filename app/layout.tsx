@@ -7,6 +7,7 @@ import RegisterModal from "./componenets/modal/RegisterModal";
 import ToastProvider from "./provides/ToastProvider";
 import LoginModal from "./componenets/modal/LoginModal";
 import getCurrentUser from "./actions/getCurrentUser";
+import RentModal from "./componenets/modal/RentModal";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default async function RootLayout({
         <Navbar currentUser={currentUser} />
         <RegisterModal />
         <LoginModal />
+        <RentModal />
         <ToastProvider />
         {children}
       </body>

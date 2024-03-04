@@ -8,6 +8,7 @@ import Logo from "./Logo";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
 import Categories from "./Categories";
+import { Suspense } from "react";
 
 interface NavbarProps {
   currentUser?: SafeUser | null;
@@ -15,7 +16,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
   const pathname = usePathname();
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <div
@@ -47,8 +48,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
             "
           >
             <div
-            onClick={() => { router.push('/') }}  
-            className="hidden md:block">
+              onClick={() => {
+                router.push("/");
+              }}
+              className="hidden md:block"
+            >
               <Logo />
             </div>
             <Search />
@@ -67,7 +71,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
         "
         >
           <Container>
-            <Categories />
+            <Suspense>
+              <Categories />
+            </Suspense>
           </Container>
         </div>
       )}

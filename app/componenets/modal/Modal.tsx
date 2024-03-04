@@ -13,6 +13,8 @@ interface ModalProps {
   body?: React.ReactElement;
   footer?: React.ReactElement;
   isOpen: boolean;
+  secondaryActionLabel?: string;
+  secondaryAction?: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -23,6 +25,8 @@ const Modal: React.FC<ModalProps> = ({
   actionLabel,
   action,
   isOpen,
+  secondaryAction,
+  secondaryActionLabel,
 }) => {
   const [showModal, setShowModal] = useState(false);
 
@@ -107,8 +111,20 @@ const Modal: React.FC<ModalProps> = ({
           <div
             className="
             pb-6
+            flex
+            flex-row
+            justify-between
+            gap-4
+            items-center
           "
           >
+            {secondaryAction && secondaryActionLabel && (
+              <Button
+                actionLabel={secondaryActionLabel}
+                action={secondaryAction}
+                outline
+              />
+            )}
             <Button actionLabel={actionLabel} action={action} />
           </div>
           {/* footer */}
