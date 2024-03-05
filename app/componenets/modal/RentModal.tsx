@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState } from "react";
 
 import useRentModal from "@/app/hooks/useRentModal";
@@ -9,6 +10,7 @@ import Heading from "../Heading";
 import { categories } from "../navbar/Categories";
 import CategoryBox from "../CategoryBox";
 import SelectCountry from "../inputs/SelectCountry";
+import useCountries from "@/app/hooks/useCountries";
 
 enum STEPS {
   CATEGORY = 0,
@@ -32,10 +34,11 @@ type FormValues = {
 };
 
 const RentModal = () => {
-  const rentModal = useRentModal();
   const [step, setStep] = useState(STEPS.CATEGORY);
+  const [isLoading, setIsLoading] = useState(false);
 
-  console.log(step);
+  const rentModal = useRentModal();
+  const { getByValue } = useCountries();
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.PRICE) {
@@ -88,6 +91,25 @@ const RentModal = () => {
     });
 
   const categoryValue = watch("category");
+  const locationValue = watch("locationValue");
+
+  const onChangeLocationValue = (value: string | undefined) => {
+    if (value) {
+      setCustomValue("locationValue", value);
+    }
+  };
+
+  const latlong = useMemo(() => {
+    return getByValue(locationValue)?.latlng;
+  }, [locationValue]);
+
+  const Map = useMemo(
+    () =>
+      dynamic(() => import("@/app/componenets/Map"), {
+        ssr: false,
+      }),
+    [latlong]
+  );
 
   let bodyContent = (
     <div className="flex flex-col gap-8 mb-8">
@@ -140,7 +162,14 @@ const RentModal = () => {
           title="Whre is your place located?"
           subtitle="Help guests find you"
         />
-        <SelectCountry />
+        <SelectCountry
+          locationValue={locationValue}
+          onChange={onChangeLocationValue}
+          disabled={isLoading}
+        />
+        <div>
+          <Map center={latlong} />
+        </div>
       </div>
     );
   }

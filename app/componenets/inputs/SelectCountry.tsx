@@ -1,28 +1,47 @@
 "use client";
 
 import Select from "react-select";
-
-import useCountries from "@/app/hooks/useCountries";
 import { useState } from "react";
 
-const SelectCountry = () => {
-  const { getAll } = useCountries();
-  const options = getAll();
+import useCountries from "@/app/hooks/useCountries";
 
-  const [value, setValue] = useState();
+export type CountryType = {
+  value: string;
+  label: string;
+  flag: string;
+  latlng: [number, number];
+  region: string;
+};
+
+interface SelectCountryProps {
+  locationValue: string;
+  onChange: (value: string | undefined) => void;
+  disabled?: boolean;
+}
+
+const SelectCountry: React.FC<SelectCountryProps> = ({
+  locationValue,
+  onChange,
+  disabled = false,
+}) => {
+  const { getAll, getByValue } = useCountries();
+  const options = getAll();
+  const value = getByValue(locationValue);
 
   return (
     <Select
       value={value}
-      onChange={(value) => {
-        setValue(value);
+      onChange={(country) => {
+        onChange(country?.value);
       }}
       options={options}
+      isClearable={true}
+      isDisabled={disabled}
       placeholder="Anywhere"
       styles={{
         control: (styles) => ({
           ...styles,
-          height: "70px",
+          height: "60px",
         }),
       }}
       theme={(theme) => ({
