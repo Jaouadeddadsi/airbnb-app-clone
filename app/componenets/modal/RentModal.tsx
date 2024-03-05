@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState } from "react";
+import { CldUploadWidget } from "next-cloudinary";
 
 import useRentModal from "@/app/hooks/useRentModal";
 import Modal from "./Modal";
@@ -11,6 +12,9 @@ import { categories } from "../navbar/Categories";
 import CategoryBox from "../CategoryBox";
 import SelectCountry from "../inputs/SelectCountry";
 import useCountries from "@/app/hooks/useCountries";
+import Counter from "../inputs/Counter";
+import { LuImagePlus } from "react-icons/lu";
+import Image from "next/image";
 
 enum STEPS {
   CATEGORY = 0,
@@ -92,6 +96,10 @@ const RentModal = () => {
 
   const categoryValue = watch("category");
   const locationValue = watch("locationValue");
+  const guestCount = watch("guestCount");
+  const roomCount = watch("roomCount");
+  const bathroomCount = watch("bathroomCount");
+  const imageSrc = watch("imageSrc");
 
   const onChangeLocationValue = (value: string | undefined) => {
     if (value) {
@@ -170,6 +178,112 @@ const RentModal = () => {
         <div>
           <Map center={latlong} />
         </div>
+      </div>
+    );
+  }
+
+  if (step === STEPS.INFO) {
+    bodyContent = (
+      <div className="flex flex-col gap-8 mb-8">
+        <Heading
+          title="Share some basics about your place"
+          subtitle="What amenities do you have?"
+        />
+        <Counter
+          title="Guests"
+          subtitle="How many guests do you allow?"
+          value={guestCount}
+          onChange={(guests) => {
+            setCustomValue("guestCount", guests);
+          }}
+        />
+        <hr />
+        <Counter
+          title="Rooms"
+          subtitle="How many rooms do you have?"
+          value={roomCount}
+          onChange={(rooms) => {
+            setCustomValue("roomCount", rooms);
+          }}
+        />
+        <hr />
+        <Counter
+          title="Bathrooms"
+          subtitle="How many bathrooms do you have?"
+          value={bathroomCount}
+          onChange={(bathrooms) => {
+            setCustomValue("bathroomCount", bathrooms);
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.IMAGE) {
+    bodyContent = (
+      <div className="flex flex-col gap-8 mb-8">
+        <Heading
+          title="Add a photo of your place?"
+          subtitle="Show guests what your place looks like!"
+        />
+        <CldUploadWidget
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRSET}
+          onSuccess={(result: any, { widget }) => {
+            setCustomValue("imageSrc", result?.info?.secure_url);
+            widget.close();
+          }}
+        >
+          {({ open }) => {
+            return (
+              <div
+                onClick={() => open()}
+                className="
+                    w-full
+                    border-2
+                    rounded-lg
+                    border-dashed
+                    cursor-pointer
+                    h-[250px]
+                    relative
+                    hover:opacity-80
+                  "
+              >
+                {imageSrc ? (
+                  <Image
+                    alt="image"
+                    src={imageSrc}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                ) : (
+                  <div
+                    className="
+                  flex
+                  justify-center
+                  items-center
+                  h-full
+                "
+                  >
+                    <div
+                      className="
+                  flex
+                  flex-col
+                  items-center
+                  gap-4
+                  text-neutral-700
+                  "
+                    >
+                      <LuImagePlus size={50} />
+                      <div className="text-lg font-semibold">
+                        Click to upload
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          }}
+        </CldUploadWidget>
       </div>
     );
   }
