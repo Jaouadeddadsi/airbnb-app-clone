@@ -9,6 +9,7 @@ import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useLoginModal from "@/app/hooks/userLoginModal";
 import { SafeUser } from "@/app/types";
 import { signOut } from "next-auth/react";
+import useRentModal from "@/app/hooks/useRentModal";
 
 interface UserMenuProps {
   currentUser?: SafeUser | null;
@@ -19,10 +20,18 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
+  const rentModal = useRentModal();
 
   const toggele = useCallback(() => {
     setIsVisible((value) => !value);
   }, []);
+
+  const openRent = useCallback(() => {
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+    rentModal.onOpen();
+  }, [loginModal, rentModal]);
 
   const dropDownMenu = currentUser ? (
     <div
@@ -43,7 +52,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
       <Item onClick={() => {}} label="My favorites" />
       <Item onClick={() => {}} label="My reservations" />
       <Item onClick={() => {}} label="My properties" />
-      <Item onClick={() => {}} label="Airbnb my home" />
+      <Item onClick={openRent} label="Airbnb my home" />
       <hr />
       <Item
         onClick={() => {
@@ -84,6 +93,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
       "
     >
       <div
+        onClick={openRent}
         className="
           hidden
           md:block

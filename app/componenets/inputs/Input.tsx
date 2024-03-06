@@ -10,6 +10,7 @@ interface InputProps {
   type?: string;
   required?: boolean;
   disabled?: boolean;
+  price?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -20,6 +21,7 @@ const Input: React.FC<InputProps> = ({
   type = "text",
   required,
   disabled,
+  price,
 }) => {
   return (
     <div className="relative">
@@ -38,6 +40,7 @@ const Input: React.FC<InputProps> = ({
         focus:outline-none
         ${errors[id] ? "border-rose-500" : "border-neutral-300"}
         ${errors[id] ? "focus:border-rose-500" : "focus:border-black"}
+        ${price ? "ps-8" : "ps-4"}
 
       `}
         type={type}
@@ -47,19 +50,39 @@ const Input: React.FC<InputProps> = ({
         className={`
         z-[-1]
         absolute
-        left-2
+        text-xs
+        ${price ? "left-4" : "left-2"}
         top-1
         transition
         peer-focus:top-1
-        peer-focus:right-2
+        ${price ? "peer-focus:left-4" : "peer-focus:left-2"}
+        peer-placeholder-shown:text-base
         peer-focus:text-xs
-        peer-placeholder-shown:left-4
+        ${
+          price
+            ? "peer-placeholder-shown:left-8"
+            : "peer-placeholder-shown:left-4"
+        }
         peer-placeholder-shown:top-4
         ${errors[id] ? "text-rose-500" : "text-neutral-500"}
         `}
       >
         {label}
       </label>
+      {price && (
+        <div
+          className="
+        absolute
+        left-4
+        top-[50%]
+        -translate-y-[58%]
+        font-semibold
+        text-lg
+      "
+        >
+          $
+        </div>
+      )}
     </div>
   );
 };

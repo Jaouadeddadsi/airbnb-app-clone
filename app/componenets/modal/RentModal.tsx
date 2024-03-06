@@ -6,7 +6,7 @@ import { CldUploadWidget } from "next-cloudinary";
 
 import useRentModal from "@/app/hooks/useRentModal";
 import Modal from "./Modal";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import Heading from "../Heading";
 import { categories } from "../navbar/Categories";
 import CategoryBox from "../CategoryBox";
@@ -15,6 +15,10 @@ import useCountries from "@/app/hooks/useCountries";
 import Counter from "../inputs/Counter";
 import { LuImagePlus } from "react-icons/lu";
 import Image from "next/image";
+import Input from "../inputs/Input";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 enum STEPS {
   CATEGORY = 0,
@@ -40,6 +44,7 @@ type FormValues = {
 const RentModal = () => {
   const [step, setStep] = useState(STEPS.CATEGORY);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const rentModal = useRentModal();
   const { getByValue } = useCountries();
@@ -118,6 +123,50 @@ const RentModal = () => {
       }),
     [latlong]
   );
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    if (step !== STEPS.PRICE) {
+      return onNext();
+    }
+
+    if (!data.category) {
+      return toast.error("Please select a category");
+    }
+    if (!data.bathroomCount) {
+      return toast.error("Please set bathroom count");
+    }
+    if (!data.guestCount) {
+      return toast.error("Please set guests count");
+    }
+    if (!data.roomCount) {
+      return toast.error("Please set room count");
+    }
+    if (!data.locationValue) {
+      return toast.error("Please select your country");
+    }
+    if (!data.price) {
+      return toast.error("Please set price per night");
+    }
+    if (!data.imageSrc) {
+      return toast.error("Please upload an image of your propertie");
+    }
+    setIsLoading(true);
+    axios
+      .post("/api/listing", data)
+      .then(() => {
+        reset();
+        rentModal.onClose();
+        router.refresh();
+        setStep(STEPS.CATEGORY);
+        toast.success("Listing created");
+      })
+      .catch((erro) => {
+        toast.error("Something went wrong!");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   let bodyContent = (
     <div className="flex flex-col gap-8 mb-8">
@@ -288,13 +337,61 @@ const RentModal = () => {
     );
   }
 
+  if (step === STEPS.DESCRIPTION) {
+    bodyContent = (
+      <div className="flex flex-col gap-8 mb-8">
+        <Heading
+          title="How would you describe your place"
+          subtitle="Short and sweet works best!"
+        />
+        <Input
+          register={register}
+          errors={errors}
+          id="title"
+          label="Title"
+          required
+          disabled={isLoading}
+        />
+        <Input
+          register={register}
+          errors={errors}
+          id="description"
+          label="Description"
+          required
+          disabled={isLoading}
+        />
+      </div>
+    );
+  }
+
+  if (step === STEPS.PRICE) {
+    bodyContent = (
+      <div className="flex flex-col gap-8 mb-8">
+        <Heading
+          title="Set your price"
+          subtitle="How much do you charge per night?"
+        />
+        <Input
+          register={register}
+          errors={errors}
+          id="price"
+          label="Price"
+          type="number"
+          required
+          disabled={isLoading}
+          price
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       {rentModal.isOpen && (
         <Modal
           label="Airbnb your home!"
           actionLabel={actionLabel}
-          action={onNext}
+          action={handleSubmit(onSubmit)}
           onClose={rentModal.onClose}
           isOpen={rentModal.isOpen}
           secondaryActionLabel={secondaryAction}
