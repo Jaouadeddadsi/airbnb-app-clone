@@ -21,13 +21,17 @@ const HeartButton: React.FC<HeartButtonProps> = ({
 
   const loginModal = useLoginModal();
 
-  const toggeleFavorite = useCallback(() => {
-    if (!currentUser) {
-      return loginModal.onOpen();
-    }
-    setIsFavorite((value) => !value);
-    axios.get(`/api/listing/${listingId}`);
-  }, [setIsFavorite, listingId, currentUser]);
+  const toggeleFavorite = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
+      if (!currentUser) {
+        return loginModal.onOpen();
+      }
+      setIsFavorite((value) => !value);
+      axios.get(`/api/listing/${listingId}`);
+    },
+    [setIsFavorite, listingId, currentUser]
+  );
 
   return (
     <div onClick={toggeleFavorite}>

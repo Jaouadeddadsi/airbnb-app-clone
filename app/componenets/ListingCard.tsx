@@ -6,6 +6,8 @@ import { SafeListing, SafeUser } from "../types";
 import useCountries from "../hooks/useCountries";
 import HeartButton from "./HeartButton";
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import useFavorite from "../hooks/useFavorite";
 
 interface ListingCardProps {
   data: SafeListing;
@@ -14,20 +16,19 @@ interface ListingCardProps {
 
 const ListingCard: React.FC<ListingCardProps> = ({ data, currentUser }) => {
   const { getByValue } = useCountries();
+  const router = useRouter();
 
   const country = getByValue(data.locationValue);
-  const favorite = useMemo(() => {
-    if (!currentUser) {
-      return false;
-    }
-    if (!currentUser.favoriteIds) {
-      return false;
-    }
-    return currentUser.favoriteIds.includes(data.id);
-  }, [currentUser, data]);
+  const favorite = useFavorite({
+    listingId: data.id,
+    currentUser: currentUser,
+  });
 
   return (
     <div
+      onClick={() => {
+        router.push(`/listings/${data.id}`);
+      }}
       className="
         col-span-1
         flex
