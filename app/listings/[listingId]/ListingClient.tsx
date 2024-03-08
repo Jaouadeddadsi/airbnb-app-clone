@@ -1,8 +1,13 @@
 "use client";
 
+import Avatar from "@/app/componenets/Avatar";
 import Container from "@/app/componenets/Container";
 import ListingHead from "@/app/componenets/listing/ListingHead";
 import { SafeListing, SafeUser } from "@/app/types";
+import { categories } from "@/app/componenets/navbar/Categories";
+import { useMemo } from "react";
+import ListingInfo from "@/app/componenets/listing/ListingInfo";
+import ListingReservation from "@/app/componenets/listing/ListingReservation";
 
 interface ListingClientProps {
   listing: SafeListing & {
@@ -11,7 +16,14 @@ interface ListingClientProps {
   currentUser?: SafeUser | null;
 }
 
-const ListingClient: React.FC<ListingClientProps> = ({ listing, currentUser }) => {
+const ListingClient: React.FC<ListingClientProps> = ({
+  listing,
+  currentUser,
+}) => {
+  const category = useMemo(() => {
+    return categories.find((item) => item.label === listing.category);
+  }, [listing.category]);
+
   return (
     <Container>
       <div
@@ -22,6 +34,30 @@ const ListingClient: React.FC<ListingClientProps> = ({ listing, currentUser }) =
       "
       >
         <ListingHead listing={listing} currentUser={currentUser} />
+        <div
+          className="
+          mt-4
+          grid
+          grid-cols-1
+          md:grid-cols-7
+          gap-8
+          mb-16
+        "
+        >
+          {/* left side */}
+          <ListingInfo
+            user={listing.user}
+            guestCount={listing.guestCount}
+            roomCount={listing.roomCount}
+            bathroomCount={listing.bathroomCount}
+            category={category}
+            title={listing.title}
+            locationValue={listing.locationValue}
+          />
+
+          {/* right side */}
+          <ListingReservation listingId={listing.id} price={listing.price} />
+        </div>
       </div>
     </Container>
   );

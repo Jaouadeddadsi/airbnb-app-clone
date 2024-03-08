@@ -21,7 +21,8 @@ const Button:React.FC<ButtonProps> = ({
       className={`
         relative
         w-full
-        p-4
+        px-4
+        py-3
         text-center
         font-semibold
         rounded-md
