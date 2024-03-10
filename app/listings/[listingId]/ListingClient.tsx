@@ -1,11 +1,11 @@
 "use client";
 
-import Avatar from "@/app/componenets/Avatar";
+import { useMemo } from "react";
+
 import Container from "@/app/componenets/Container";
 import ListingHead from "@/app/componenets/listing/ListingHead";
-import { SafeListing, SafeUser } from "@/app/types";
+import { SafeListing, SafeReservation, SafeUser } from "@/app/types";
 import { categories } from "@/app/componenets/navbar/Categories";
-import { useMemo } from "react";
 import ListingInfo from "@/app/componenets/listing/ListingInfo";
 import ListingReservation from "@/app/componenets/listing/ListingReservation";
 
@@ -14,11 +14,13 @@ interface ListingClientProps {
     user: SafeUser;
   };
   currentUser?: SafeUser | null;
+  reservations: SafeReservation[];
 }
 
 const ListingClient: React.FC<ListingClientProps> = ({
   listing,
   currentUser,
+  reservations,
 }) => {
   const category = useMemo(() => {
     return categories.find((item) => item.label === listing.category);
@@ -56,7 +58,11 @@ const ListingClient: React.FC<ListingClientProps> = ({
           />
 
           {/* right side */}
-          <ListingReservation listingId={listing.id} price={listing.price} />
+          <ListingReservation
+            listingId={listing.id}
+            price={listing.price}
+            reservations={reservations}
+          />
         </div>
       </div>
     </Container>

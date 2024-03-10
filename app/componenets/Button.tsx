@@ -6,14 +6,16 @@ interface ButtonProps {
   actionLabel: string;
   action: () => void;
   outline?: boolean;
-  icon?: IconType
+  icon?: IconType,
+  disabled?: boolean,
 }
 
 const Button:React.FC<ButtonProps> = ({
   actionLabel,
   action,
   outline,
-  icon: Icon
+  icon: Icon,
+  disabled = false
 }) => {
   return ( 
     <button
@@ -32,6 +34,7 @@ const Button:React.FC<ButtonProps> = ({
         ${outline ? 'bg-white' : 'bg-rose-500'}
         ${outline ? 'text-black' : 'text-white'}
         ${outline ? 'border-black' : 'border-rose-500'}
+        ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
         
       `}
     >

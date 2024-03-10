@@ -12,9 +12,14 @@ interface CalenderProps {
     key: string;
   }[];
   onChange: (item: any) => void;
+  disabledDates: Date[];
 }
 
-const Calendar: React.FC<CalenderProps> = ({ range, onChange }) => {
+const Calendar: React.FC<CalenderProps> = ({
+  range,
+  onChange,
+  disabledDates,
+}) => {
   return (
     <DateRange
       rangeColors={["#000"]}
@@ -22,6 +27,7 @@ const Calendar: React.FC<CalenderProps> = ({ range, onChange }) => {
       moveRangeOnFirstSelection={false}
       ranges={range}
       showDateDisplay={false}
+      disabledDates={disabledDates}
     />
   );
 };
