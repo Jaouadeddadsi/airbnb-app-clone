@@ -5,24 +5,56 @@ import Image from "next/image";
 import { SafeListing, SafeUser } from "../types";
 import useCountries from "../hooks/useCountries";
 import HeartButton from "./HeartButton";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import useFavorite from "../hooks/useFavorite";
+import { format } from "date-fns";
+import Button from "./Button";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 interface ListingCardProps {
   data: SafeListing;
   currentUser?: SafeUser | null;
+  startDate?: string;
+  endDate?: string;
+  totalPrice?: number;
+  reservationId?: string  
 }
 
-const ListingCard: React.FC<ListingCardProps> = ({ data, currentUser }) => {
+const ListingCard: React.FC<ListingCardProps> = ({
+  data,
+  currentUser,
+  startDate,
+  endDate,
+  totalPrice,
+  reservationId
+}) => {
+  const [isLoading, setIsLoading] = useState(false)
+
   const { getByValue } = useCountries();
   const router = useRouter();
-
   const country = getByValue(data.locationValue);
   const favorite = useFavorite({
     listingId: data.id,
     currentUser: currentUser,
   });
+
+  const onCancel = useCallback((e:React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    setIsLoading(true)
+    axios.delete(`/api/reservation/${reservationId}`)
+    .then(() => {
+      router.refresh()
+      toast.success("Reservation canceled")
+    })
+    .catch(() => {
+      toast.error('Something went wrong!')
+    })
+    .finally(() => {
+      setIsLoading(false)
+    })
+  }, [reservationId])
 
   return (
     <div
@@ -78,11 +110,24 @@ const ListingCard: React.FC<ListingCardProps> = ({ data, currentUser }) => {
           text-neutral-500
         "
       >
-        {data.category}
+        {startDate && endDate
+          ? `${format(new Date(startDate), "MMM dd, yyyy")} - ${format(
+              new Date(endDate),
+              "MMM dd, yyyy"
+            )}`
+          : data.category}
       </div>
       <div className="font-semibold">
-        $ {data.price} <span className="font-normal text-sm">night</span>
+        $ {totalPrice ? totalPrice : data.price}{" "}
+        {!totalPrice && <span className="font-normal text-sm">night</span>}
       </div>
+      {reservationId && (
+        <Button
+        actionLabel="Cancel reservation"
+        action={onCancel}
+        disabled={isLoading}
+      />
+      )}
     </div>
   );
 };

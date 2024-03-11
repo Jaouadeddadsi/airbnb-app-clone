@@ -4,7 +4,7 @@ import Container from "./componenets/Container";
 import ListingCard from "./componenets/ListingCard";
 
 export default async function Home() {
-  const listings = await getListings();
+  const listings = await getListings({listingsIds: undefined});
   const currentUser = await getCurrentUser();
   return (
     <div className="mt-52">

@@ -1,15 +1,15 @@
 "use client";
 
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { eachDayOfInterval } from "date-fns";
 import differenceInCalendarDays from "date-fns/differenceInCalendarDays";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
 import Calendar from "../inputs/Calendar";
 import Button from "../Button";
 import { SafeReservation } from "@/app/types";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 
 interface ListingReservationProps {
   listingId: string;
@@ -79,8 +79,8 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       .post("/api/reservation", data)
       .then(() => {
         // back to it
-        router.refresh();
-        toast.success("Reservation success!");
+        router.push('/trips');
+        router.refresh()
       })
       .catch((erro: any) => {
         toast.error("Something went wrong!");

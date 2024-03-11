@@ -2,25 +2,39 @@ import prisma from "../libs/db";
 
 interface IPrams {
   listingId?: string;
+  userId?: string;
 }
 
 export default async function getReservations(params: IPrams) {
   try {
-    const { listingId } = params;
-    if (!listingId || typeof listingId !== "string") {
-      return [];
+    const { listingId, userId } = params;
+    let query = {};
+    if (listingId) {
+      query = {
+        ...query,
+        listingId,
+      };
+    }
+    if (userId) {
+      query = {
+        ...query,
+        userId,
+      };
     }
     const reservations = await prisma.reservation.findMany({
-      where: {
-        listingId,
-      },
+      where: query,
+      include: { listing: true },
     });
 
     const safeReservations = reservations.map((reservation) => ({
       ...reservation,
       createdAt: reservation.createdAt.toISOString(),
       startDate: reservation.startDate.toISOString(),
-      endDate: reservation.endDate.toDateString(),
+      endDate: reservation.endDate.toISOString(),
+      listing: {
+        ...reservation.listing,
+        createdAt: reservation.listing.createdAt.toISOString(),
+      },
     }));
 
     return safeReservations;
