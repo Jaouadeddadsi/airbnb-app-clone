@@ -1,24 +1,23 @@
 import getCurrentUser from "../actions/getCurrentUser";
 import getListings from "../actions/getListings";
-import getReservations from "../actions/getReservations";
 import Container from "../componenets/Container";
-
 import EmptyState from "../componenets/EmptyState";
 import Heading from "../componenets/Heading";
 import ListingCard from "../componenets/ListingCard";
 
-const TripsPage = async () => {
+const FavoritesPage = async () => {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
     return;
   }
-  const reservations = await getReservations({ userId: currentUser.id });
 
-  if (reservations.length === 0) {
+  const listings = await getListings({ favoriteIds: currentUser.favoriteIds });
+
+  if (listings.length === 0) {
     return (
       <EmptyState
-        title="No Trips found"
-        subtitle="Looks like you havent reserved any trips"
+        title="No favorite listings found"
+        subtitle="Looks like you have no favorite listing"
       />
     );
   }
@@ -27,8 +26,8 @@ const TripsPage = async () => {
     <div className="mt-28">
       <Container>
         <Heading
-          title="Trips"
-          subtitle="Where you've been and where you're going"
+          title="Favorites"
+          subtitle="List of places you have favorited!"
         />
         <div
           className="
@@ -43,15 +42,11 @@ const TripsPage = async () => {
             gap-8
           "
         >
-          {reservations.map((reservation) => (
+          {listings.map((listing) => (
             <ListingCard
-              key={reservation.id}
-              data={reservation.listing}
+              key={listing.id}
+              data={listing}
               currentUser={currentUser}
-              startDate={reservation.startDate}
-              endDate={reservation.endDate}
-              totalPrice={reservation.totalPrice}
-              reservationId={reservation.id}
             />
           ))}
         </div>
@@ -60,4 +55,4 @@ const TripsPage = async () => {
   );
 };
 
-export default TripsPage;
+export default FavoritesPage;

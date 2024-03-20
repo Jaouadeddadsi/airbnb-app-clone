@@ -2,10 +2,11 @@ import prisma from "../libs/db";
 
 interface IParams {
   listingsIds?: string[] | undefined;
+  favoriteIds?: string[] | undefined;
 }
 
 export default async function getListings(params: IParams) {
-  const {listingsIds} = params;
+  const { listingsIds, favoriteIds } = params;
 
   let query = {};
   if (listingsIds) {
@@ -14,6 +15,13 @@ export default async function getListings(params: IParams) {
       id: { in: listingsIds },
     };
   }
+  if (favoriteIds) {
+    query = {
+      ...query,
+      id: {in: favoriteIds} 
+    };
+  }
+
   const listings = await prisma.listing.findMany({
     where: query,
   });

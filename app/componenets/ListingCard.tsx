@@ -5,9 +5,8 @@ import Image from "next/image";
 import { SafeListing, SafeUser } from "../types";
 import useCountries from "../hooks/useCountries";
 import HeartButton from "./HeartButton";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import useFavorite from "../hooks/useFavorite";
 import { format } from "date-fns";
 import Button from "./Button";
 import axios from "axios";
@@ -19,7 +18,7 @@ interface ListingCardProps {
   startDate?: string;
   endDate?: string;
   totalPrice?: number;
-  reservationId?: string  
+  reservationId?: string;
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -28,33 +27,33 @@ const ListingCard: React.FC<ListingCardProps> = ({
   startDate,
   endDate,
   totalPrice,
-  reservationId
+  reservationId,
 }) => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const { getByValue } = useCountries();
   const router = useRouter();
   const country = getByValue(data.locationValue);
-  const favorite = useFavorite({
-    listingId: data.id,
-    currentUser: currentUser,
-  });
 
-  const onCancel = useCallback((e:React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    setIsLoading(true)
-    axios.delete(`/api/reservation/${reservationId}`)
-    .then(() => {
-      router.refresh()
-      toast.success("Reservation canceled")
-    })
-    .catch(() => {
-      toast.error('Something went wrong!')
-    })
-    .finally(() => {
-      setIsLoading(false)
-    })
-  }, [reservationId])
+  const onCancel = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      setIsLoading(true);
+      axios
+        .delete(`/api/reservation/${reservationId}`)
+        .then(() => {
+          router.refresh();
+          toast.success("Reservation canceled");
+        })
+        .catch(() => {
+          toast.error("Something went wrong!");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    },
+    [reservationId]
+  );
 
   return (
     <div
@@ -92,7 +91,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
             "
         />
         <HeartButton
-          favorite={favorite}
           listingId={data.id}
           currentUser={currentUser}
         />
@@ -123,10 +121,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
       </div>
       {reservationId && (
         <Button
-        actionLabel="Cancel reservation"
-        action={onCancel}
-        disabled={isLoading}
-      />
+          actionLabel="Cancel reservation"
+          action={onCancel}
+          disabled={isLoading}
+        />
       )}
     </div>
   );

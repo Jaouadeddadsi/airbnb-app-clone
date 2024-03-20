@@ -5,33 +5,22 @@ import React, { useCallback, useMemo, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { SafeUser } from "../types";
 import useLoginModal from "../hooks/userLoginModal";
+import { useRouter } from "next/navigation";
+import useFavorite from "../hooks/useFavorite";
 
 interface HeartButtonProps {
-  favorite: boolean;
   listingId: string;
   currentUser?: SafeUser | null;
 }
 
 const HeartButton: React.FC<HeartButtonProps> = ({
-  favorite,
   listingId,
   currentUser,
 }) => {
-  const [isFavorite, setIsFavorite] = useState(favorite);
-
-  const loginModal = useLoginModal();
-
-  const toggeleFavorite = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation();
-      if (!currentUser) {
-        return loginModal.onOpen();
-      }
-      setIsFavorite((value) => !value);
-      axios.get(`/api/listing/${listingId}`);
-    },
-    [setIsFavorite, listingId, currentUser]
-  );
+  const { hasFavorited, toggeleFavorite } = useFavorite({
+    listingId,
+    currentUser,
+  });
 
   return (
     <div onClick={toggeleFavorite}>
@@ -50,7 +39,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
       absolute
       top-[14px]
       right-[14px]
-      ${isFavorite ? "fill-rose-500" : "fill-gray-500"}
+      ${hasFavorited ? "fill-rose-500" : "fill-gray-500"}
       `}
       />
     </div>

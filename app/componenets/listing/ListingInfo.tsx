@@ -3,7 +3,6 @@
 import { SafeUser } from "@/app/types";
 import { IconType } from "react-icons";
 import Avatar from "../Avatar";
-import { icon } from "leaflet";
 import ListingCategory from "./ListingCategory";
 import useCountries from "@/app/hooks/useCountries";
 import { useMemo } from "react";

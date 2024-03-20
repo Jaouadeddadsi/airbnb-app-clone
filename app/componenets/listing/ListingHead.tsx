@@ -1,12 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo } from "react";
 
 import useCountries from "@/app/hooks/useCountries";
 import { SafeListing, SafeUser } from "@/app/types";
 import HeartButton from "../HeartButton";
-import useFavorite from "@/app/hooks/useFavorite";
 
 interface ListingHeadProps {
   listing: SafeListing & {
@@ -19,11 +17,6 @@ const ListingHead: React.FC<ListingHeadProps> = ({ listing, currentUser }) => {
   const { getByValue } = useCountries();
   const country = getByValue(listing.locationValue);
   
-  const favorite = useFavorite({
-    listingId:listing.id, 
-    currentUser: currentUser
-  })
-
   return (
     <div
       className="
@@ -54,7 +47,6 @@ const ListingHead: React.FC<ListingHeadProps> = ({ listing, currentUser }) => {
         />
         <div>
           <HeartButton
-            favorite={favorite}
             listingId={listing.id}
             currentUser={currentUser}
           />
