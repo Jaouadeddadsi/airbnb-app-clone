@@ -19,6 +19,7 @@ interface ListingCardProps {
   endDate?: string;
   totalPrice?: number;
   reservationId?: string;
+  actionLabel?: string;
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -28,6 +29,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   endDate,
   totalPrice,
   reservationId,
+  actionLabel
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -119,9 +121,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
         $ {totalPrice ? totalPrice : data.price}{" "}
         {!totalPrice && <span className="font-normal text-sm">night</span>}
       </div>
-      {reservationId && (
+      {reservationId && actionLabel && (
         <Button
-          actionLabel="Cancel reservation"
+          actionLabel={actionLabel}
           action={onCancel}
           disabled={isLoading}
         />

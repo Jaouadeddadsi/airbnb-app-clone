@@ -1,33 +1,37 @@
 import getCurrentUser from "../actions/getCurrentUser";
 import getReservations from "../actions/getReservations";
 import Container from "../componenets/Container";
-
 import EmptyState from "../componenets/EmptyState";
 import Heading from "../componenets/Heading";
 import ListingCard from "../componenets/ListingCard";
 
-const TripsPage = async () => {
+const ReservationPage = async () => {
   const currentUser = await getCurrentUser();
+
   if (!currentUser) {
-    return <EmptyState title="Unauthorized" subtitle="Please login"/>;
+    return <EmptyState
+      title="Unauthorized"
+      subtitle="Please login"
+    />
   }
-  const reservations = await getReservations({ userId: currentUser.id });
+
+  const reservations =  await getReservations({authorId: currentUser.id});
 
   if (reservations.length === 0) {
     return (
       <EmptyState
         title="No Trips found"
-        subtitle="Looks like you havent reserved any trips"
+        subtitle="Looks like you have no reservation"
       />
-    );
+    )
   }
 
   return (
     <div className="mt-28">
       <Container>
         <Heading
-          title="Trips"
-          subtitle="Where you've been and where you're going"
+          title="Reservations"
+          subtitle="Bookings on your properties"
         />
         <div
           className="
@@ -51,13 +55,13 @@ const TripsPage = async () => {
               endDate={reservation.endDate}
               totalPrice={reservation.totalPrice}
               reservationId={reservation.id}
-              actionLabel="Cancel reservation"
+              actionLabel="Cancel guest reservation"
             />
           ))}
         </div>
       </Container>
     </div>
   );
-};
-
-export default TripsPage;
+}
+ 
+export default ReservationPage;

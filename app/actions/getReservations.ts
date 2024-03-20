@@ -3,11 +3,12 @@ import prisma from "../libs/db";
 interface IPrams {
   listingId?: string;
   userId?: string;
+  authorId?: string;
 }
 
 export default async function getReservations(params: IPrams) {
   try {
-    const { listingId, userId } = params;
+    const { listingId, userId, authorId } = params;
     let query = {};
     if (listingId) {
       query = {
@@ -21,9 +22,20 @@ export default async function getReservations(params: IPrams) {
         userId,
       };
     }
+    if (authorId) {
+      query = {
+        ...query,
+        listing: {
+          userId: authorId,
+        },
+      };
+    }
     const reservations = await prisma.reservation.findMany({
       where: query,
       include: { listing: true },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     const safeReservations = reservations.map((reservation) => ({
