@@ -7,11 +7,11 @@ export async function POST(request: Request) {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser) {
-      return NextResponse;
+      return NextResponse.error();
     }
-    
+
     const body = await request.json();
-    
+
     const { startDate, endDate, price, listingId } = body;
 
     if (!startDate || !endDate || !price || !listingId) {
