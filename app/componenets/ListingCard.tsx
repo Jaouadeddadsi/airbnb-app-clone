@@ -20,6 +20,7 @@ interface ListingCardProps {
   totalPrice?: number;
   reservationId?: string;
   actionLabel?: string;
+  deleteProperty?:boolean
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -29,7 +30,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
   endDate,
   totalPrice,
   reservationId,
-  actionLabel
+  actionLabel,
+  deleteProperty=false
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,6 +58,24 @@ const ListingCard: React.FC<ListingCardProps> = ({
     },
     [reservationId]
   );
+
+  const onDelete = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => { 
+      e.stopPropagation();
+      setIsLoading(true);
+      axios.delete(`/api/listing/${data.id}`)
+      .then(() => {
+        router.refresh();
+        toast.success("Property deleted")
+      })
+      .catch(() => {
+        toast.error("Something went wrong!");
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+    }, [data.id]
+  )
 
   return (
     <div
@@ -125,6 +145,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <Button
           actionLabel={actionLabel}
           action={onCancel}
+          disabled={isLoading}
+        />
+      )}
+      { deleteProperty && (
+        <Button
+          actionLabel="Delete Property"
+          action={onDelete}
           disabled={isLoading}
         />
       )}

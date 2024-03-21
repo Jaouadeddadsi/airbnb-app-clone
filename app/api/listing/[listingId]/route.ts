@@ -6,7 +6,10 @@ interface IParams {
   listingId?: string;
 }
 
-export async function GET(request: Request, { params }: { params: IParams }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: IParams }
+) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
@@ -18,22 +21,15 @@ export async function GET(request: Request, { params }: { params: IParams }) {
     throw new Error("Invalid id");
   }
 
-  let favoriteIds = currentUser.favoriteIds || [];
-
-  if (favoriteIds.includes(listingId)) {
-    favoriteIds = favoriteIds.filter((item) => item !== listingId);
-  } else {
-    favoriteIds.push(listingId);
+  try {
+    const listing = await prisma.listing.delete({
+      where: {
+        id: listingId,
+        userId: currentUser.id,
+      },
+    });
+    return NextResponse.json(listing);
+  } catch (error) {
+    return NextResponse.error();
   }
-
-  const user = await prisma.user.update({
-    where: {
-      id: currentUser.id,
-    },
-    data: {
-      favoriteIds,
-    },
-  });
-
-  return NextResponse.json(user);
 }
