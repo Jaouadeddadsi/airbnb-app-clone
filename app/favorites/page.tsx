@@ -1,5 +1,5 @@
 import getCurrentUser from "../actions/getCurrentUser";
-import getListings from "../actions/getListings";
+import getFavoriteListings from "../actions/getFavoriteListings";
 import Container from "../componenets/Container";
 import EmptyState from "../componenets/EmptyState";
 import Heading from "../componenets/Heading";
@@ -11,7 +11,7 @@ const FavoritesPage = async () => {
     return;
   }
 
-  const listings = await getListings({ favoriteIds: currentUser.favoriteIds });
+  const listings = await getFavoriteListings();
 
   if (listings.length === 0) {
     return (

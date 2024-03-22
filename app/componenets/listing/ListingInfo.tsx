@@ -38,7 +38,7 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   const center = useMemo(() => {
     const country = getByValue(locationValue);
     return country?.latlng;
-  }, [locationValue]);
+  }, [locationValue, getByValue]);
 
   const Map = useMemo(() => {
     return dynamic(() => import("@/app/componenets/Map"), {

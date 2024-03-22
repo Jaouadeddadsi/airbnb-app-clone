@@ -24,12 +24,12 @@ const Counter: React.FC<CounterProps> = ({
     }
     onChange(guests - 1);
     setGuests((n) => n - 1);
-  }, [guests, setGuests]);
+  }, [guests, setGuests, onChange]);
 
   const onPlus = useCallback(() => {
     onChange(guests + 1);
     setGuests((n) => n + 1);
-  }, [guests, setGuests]);
+  }, [guests, setGuests, onChange]);
 
   return (
     <div className="flex flex-row justify-between items-center">

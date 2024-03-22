@@ -56,7 +56,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
           setIsLoading(false);
         });
     },
-    [reservationId]
+    [reservationId, router]
   );
 
   const onDelete = useCallback(
@@ -74,7 +74,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
       .finally(() => {
         setIsLoading(false)
       })
-    }, [data.id]
+    }, [data.id, router]
   )
 
   return (

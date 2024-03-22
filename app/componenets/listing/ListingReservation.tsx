@@ -46,7 +46,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
     } else {
       setTotalPrice(dayCount * price);
     }
-  }, [range]);
+  }, [range, price]);
 
   const onChange = useCallback(
     (item: any) => {
@@ -88,7 +88,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       .finally(() => {
         setIsLaoding(false);
       });
-  }, [range, setIsLaoding]);
+  }, [range, setIsLaoding, listingId, price, router]);
 
   return (
     <div

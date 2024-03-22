@@ -114,7 +114,7 @@ const RentModal = () => {
 
   const latlong = useMemo(() => {
     return getByValue(locationValue)?.latlng;
-  }, [locationValue]);
+  }, [locationValue, getByValue]);
 
   const Map = useMemo(
     () =>
