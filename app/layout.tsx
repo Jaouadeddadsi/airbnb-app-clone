@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 
@@ -31,7 +32,9 @@ export default async function RootLayout({
         <RegisterModal />
         <LoginModal />
         <RentModal />
-        <SearchModal />
+        <Suspense>
+          <SearchModal />
+        </Suspense>
         <ToastProvider />
         {children}
       </body>
