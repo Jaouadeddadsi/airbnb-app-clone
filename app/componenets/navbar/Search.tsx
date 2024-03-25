@@ -1,10 +1,46 @@
 "use client";
 
+import useCountries from "@/app/hooks/useCountries";
 import useSearchModal from "@/app/hooks/useSearchModal";
+import { differenceInCalendarDays } from "date-fns";
+import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import { IoSearch } from "react-icons/io5";
 
 const Search = () => {
   const searchModal = useSearchModal()
+  const params = useSearchParams()
+  const {getByValue} = useCountries()
+
+  const location = useMemo(() => {
+    const locationValue = params.get('locationValue')
+    console.log(locationValue);
+    
+    if (!locationValue) {
+      return "Anywhere"
+    }
+    return getByValue(locationValue)?.label
+   }, [params, getByValue])
+
+  const days = useMemo(() => { 
+    const startDate = params.get("startDate");
+    const endDate = params.get("endDate");
+    if (startDate && endDate) {
+      const daysDifference = differenceInCalendarDays(
+        new Date(endDate),
+        new Date(startDate))
+      return `${daysDifference} days` 
+    }
+    return "Any Week"
+   }, [params])
+
+  const guests = useMemo(() => {
+    const guestCount = params.get("guestCount");
+    if (guestCount) {
+      return `${guestCount} Guests`
+    }
+    return "Add Guests"
+   }, [params])
   return (
     <div
       onClick={searchModal.onOpen}
@@ -37,7 +73,7 @@ const Search = () => {
         pe-6
         "
       >
-        Anywhere
+        {location}
       </div>
       <div
         className="
@@ -46,7 +82,7 @@ const Search = () => {
         sm:block
         "
       >
-        Any Week
+        {days}
       </div>
       <div
         className="
@@ -66,7 +102,7 @@ const Search = () => {
         sm:block
         "
         >
-          Add Guests
+          {guests}
         </div>
         <div
           className="

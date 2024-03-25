@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { SafeUser } from "@/app/types";
@@ -8,7 +9,6 @@ import Logo from "./Logo";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
 import Categories from "./Categories";
-import { Suspense } from "react";
 
 interface NavbarProps {
   currentUser?: SafeUser | null;
@@ -55,7 +55,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
             >
               <Logo />
             </div>
+            <Suspense>
             <Search />
+            </Suspense>
             <UserMenu currentUser={currentUser} />
           </div>
         </Container>
