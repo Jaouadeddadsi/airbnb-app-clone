@@ -17,14 +17,11 @@ interface ListingReservationProps {
   reservations: SafeReservation[];
 }
 
-const initialRange = [
-  {
-    startDate: new Date(),
-    endDate: new Date(),
-    key: "selection",
-  },
-];
-
+const initialRange = {
+  startDate: new Date(),
+  endDate: new Date(),
+  key: "selection",
+};
 const ListingReservation: React.FC<ListingReservationProps> = ({
   listingId,
   price,
@@ -37,8 +34,8 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   const router = useRouter();
 
   useEffect(() => {
-    const startDate = range[0].startDate;
-    const endDate = range[0].endDate;
+    const startDate = range.startDate;
+    const endDate = range.endDate;
 
     const dayCount = differenceInCalendarDays(endDate, startDate);
     if (dayCount === 0) {
@@ -50,7 +47,7 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
 
   const onChange = useCallback(
     (item: any) => {
-      setRange([item.selection]);
+      setRange(item.selection);
     },
     [setRange]
   );
@@ -70,8 +67,8 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   const onReserve = useCallback(() => {
     setIsLaoding(true);
     const data = {
-      startDate: range[0].startDate,
-      endDate: range[0].endDate,
+      startDate: range.startDate,
+      endDate: range.endDate,
       price,
       listingId,
     };
@@ -79,8 +76,8 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
       .post("/api/reservation", data)
       .then(() => {
         // back to it
-        router.push('/trips');
-        router.refresh()
+        router.push("/trips");
+        router.refresh();
       })
       .catch((erro: any) => {
         toast.error("Something went wrong!");
@@ -116,15 +113,10 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
         range={range}
         onChange={onChange}
         disabledDates={disabledDates}
-        
       />
       <hr />
       <div className="p-4">
-        <Button 
-          actionLabel="Reserve" 
-          action={onReserve}
-          disabled={isLoading}
-          />
+        <Button actionLabel="Reserve" action={onReserve} disabled={isLoading} />
       </div>
       <div
         className="

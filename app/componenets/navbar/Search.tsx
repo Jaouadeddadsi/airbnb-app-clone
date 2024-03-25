@@ -1,10 +1,13 @@
 "use client";
 
+import useSearchModal from "@/app/hooks/useSearchModal";
 import { IoSearch } from "react-icons/io5";
 
 const Search = () => {
+  const searchModal = useSearchModal()
   return (
     <div
+      onClick={searchModal.onOpen}
       className="
         flex
         flex-row

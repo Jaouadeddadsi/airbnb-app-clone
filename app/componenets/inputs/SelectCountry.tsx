@@ -35,7 +35,7 @@ const SelectCountry: React.FC<SelectCountryProps> = ({
         onChange(country?.value);
       }}
       options={options}
-      isClearable={true}
+      isClearable
       isDisabled={disabled}
       placeholder="Anywhere"
       styles={{

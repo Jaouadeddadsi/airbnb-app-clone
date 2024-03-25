@@ -8,6 +8,7 @@ import ToastProvider from "./provides/ToastProvider";
 import LoginModal from "./componenets/modal/LoginModal";
 import getCurrentUser from "./actions/getCurrentUser";
 import RentModal from "./componenets/modal/RentModal";
+import SearchModal from "./componenets/modal/SearchModal";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default async function RootLayout({
         <RegisterModal />
         <LoginModal />
         <RentModal />
+        <SearchModal />
         <ToastProvider />
         {children}
       </body>
