@@ -86,13 +86,13 @@ const LoginModal = () => {
     <div className="flex flex-col gap-4">
       <Button
         actionLabel="Continue with Google"
-        action={() => {}}
+        action={() => signIn("google")}
         icon={FcGoogle}
         outline
       />
       <Button
         actionLabel="Continue with Github"
-        action={() => {}}
+        action={() => signIn("github")}
         icon={FaGithub}
         outline
       />
