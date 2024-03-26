@@ -3,7 +3,11 @@
 import { IoMenu } from "react-icons/io5";
 import Avatar from "../Avatar";
 
-const UserItem = () => {
+interface UserItemProps {
+  imageSrc?: string | null;
+} 
+
+const UserItem:React.FC<UserItemProps> = ({imageSrc}) => {
   return (
     <button
       className="
@@ -27,7 +31,7 @@ const UserItem = () => {
     >
       <IoMenu size={24} className="text-neutral-500" />
       <div className="hidden md:block">
-        <Avatar />
+        <Avatar imageSrc={imageSrc}/>
       </div>
     </button>
   );

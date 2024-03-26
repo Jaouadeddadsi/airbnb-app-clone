@@ -18,7 +18,7 @@ interface UserMenuProps {
 
 const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
@@ -50,10 +50,30 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
         overflow-hidden
         "
     >
-      <Item onClick={() => {router.push("/trips")}} label="My trips" />
-      <Item onClick={() => {router.push("/favorites")}} label="My favorites" />
-      <Item onClick={() => {router.push("/reservations")}} label="My reservations" />
-      <Item onClick={() => {router.push("/properties")}} label="My properties" />
+      <Item
+        onClick={() => {
+          router.push("/trips");
+        }}
+        label="My trips"
+      />
+      <Item
+        onClick={() => {
+          router.push("/favorites");
+        }}
+        label="My favorites"
+      />
+      <Item
+        onClick={() => {
+          router.push("/reservations");
+        }}
+        label="My reservations"
+      />
+      <Item
+        onClick={() => {
+          router.push("/properties");
+        }}
+        label="My properties"
+      />
       <Item onClick={openRent} label="Airbnb my home" />
       <hr />
       <Item
@@ -109,7 +129,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
       >
         Airbnb your home
       </div>
-      <UserItem />
+      <UserItem imageSrc={currentUser?.image} />
       {isVisible && dropDownMenu}
     </div>
   );
