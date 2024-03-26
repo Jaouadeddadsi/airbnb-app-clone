@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -101,7 +102,7 @@ const RegisterModal = () => {
     <div className="flex flex-col gap-4">
       <Button
         actionLabel="Continue with Google"
-        action={() => {}}
+        action={() => {signIn("google")}}
         icon={FcGoogle}
         outline
       />
